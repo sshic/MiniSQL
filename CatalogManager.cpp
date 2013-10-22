@@ -4,10 +4,14 @@
 #include <iostream>
 #include <fstream>
 #include <io.h>
+#include <cstdlib>
+
 #define UNKNOWN_FILE 8                                 //三个宏定义，用于定义文件类型
 #define TABLE_FILE 9
 #define INDEX_FILE 10
+
 using namespace std;
+
 CatalogManager::CatalogManager()
 {
 	char tmp[126];

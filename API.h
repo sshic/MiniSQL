@@ -1,15 +1,21 @@
 /************************些文件包括MiniSQL中API类的定义********************************************/
 #ifndef API_H
 #define API_H
+
 #include "RecordManager.h"
 #include <string>
 #include <vector>
+
 using namespace std;
+
 class IndexManager;
+
 class RecordManager;
+
 class API{
+private:
+    RecordManager rm;
 public:
-	RecordManager rm;
 	API(){}
 	~API(){}
 	void dropTable(string tableName);

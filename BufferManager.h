@@ -1,7 +1,6 @@
 /****************************此文件包括MiniSQl中BufferManager类的定义 **********************/
 #ifndef BufferManager_H
 #define BufferManager_H
-#include "stdafx.h"
 #define MAX_BLOCK_NUM 40       //定义预先分配的文件块的数目
 #define MAX_FILE_NUM 5         //定义预先分配的文件节点的数目
 

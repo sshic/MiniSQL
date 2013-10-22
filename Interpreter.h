@@ -21,6 +21,7 @@ public:
 	string  condition1;	//where关键字后第一个条件中逻辑运算符后的常量。
 	string  condition2;	//where关键字后第二个条件中逻辑运算符后的常量。
 
+public:
 	vector<string> insertValue;  	//insert语句中values后括号中的各个值。（存在一个vector变量中）
 
 

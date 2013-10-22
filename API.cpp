@@ -3,7 +3,8 @@
 #include "CatalogManager.h"
 #include <iostream>
 #include <vector>
-#include <string>
+#include <cstring>
+#include <cstdlib>
 
 #define UNKNOWN_FILE 8                                 //三个宏定义，用于定义文件类型
 #define TABLE_FILE 9

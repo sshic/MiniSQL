@@ -1,9 +1,10 @@
 /************************包括MiniSQL中Main函数的实现****************************************/
 
-#include "Interpreter.h"
-#include "API.h"
-#include "CatalogManager.h"
-#include "BufferManager.h"
+#include "Interpreter.cpp"
+#include "API.cpp"
+#include "CatalogManager.cpp"
+#include "BufferManager.cpp"
+#include "RecordManager.cpp"
 
 #include <iostream>
 #include <string>

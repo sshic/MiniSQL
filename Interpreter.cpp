@@ -1,8 +1,10 @@
 /************************包括Interpreter类里面的函数实现****************************/
 #include "Interpreter.h"
-#include <string>
+#include <cstring>
 #include <iostream>
+
 using namespace std;
+
 #define CREATE 0  //first key
 #define SELECT 1
 #define DROP 2
