@@ -1,7 +1,5 @@
 /************************些文件包括MiniSQL中RecordManager类里面的函数实现********************************/
-/************************作者:陈矫彦  时间：2009年10月***************************************************/
 
-#include "stdafx.h"
 #include "RecordManager.h"
 #include "BufferManager.h"
 #include "API.h"
@@ -9,7 +7,7 @@
 #include <iostream>
 
 //宏定义，块大小，逻辑符
-#define BLOCK_SIZE 4096                  
+#define BLOCK_SIZE 4096
 #define AND 11
 #define OR 12
 class BufferManager;
@@ -17,7 +15,7 @@ class API;
 
 
 //外部变量声明
-extern BufferManager bm;                 
+extern BufferManager bm;
 extern API ap;
 
 
@@ -25,7 +23,7 @@ extern API ap;
 int RecordManager::deleteValue(string tableName)
 {
 	//查找文件节点
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
 	if(fp!=NULL)
 	{
 		BufferManager::BlockInfo * bp=fp->blockHead;
@@ -53,7 +51,7 @@ int RecordManager::deleteValue(string tableName)
 			else
 				bp=bp->nextBlock;
 		}
-		
+
 	}
 	//返回删除的行数目
 	return ap.getRecordNum(tableName);
@@ -64,7 +62,7 @@ int RecordManager::deleteValue(string tableName)
 int RecordManager::deleteValue(string tableName, string colName1,string cond1,string operater1)
 {
 	//得到文件节点
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
 	int deleteNum=0;
 
 	if(fp!=NULL)
@@ -83,7 +81,7 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 		int recordLen;
 		//计算这个表中的记录长度
 		recordLen=ap.calcuteLenth(tableName);
-		
+
 
 		BufferManager::BlockInfo * bp=fp->blockHead;
 		if(bp==NULL)
@@ -95,13 +93,13 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 		while(1)
 		{
 			if(bp==NULL)
-				break;	
+				break;
 			bp->lru++;
 			p=bp->address;
 
 			//此处每次*P的判断，都是一个字段的开始字节，所以当*P为0时，这个块已经被读完
 			while(p-bp->address<bp->usage)
-			{		
+			{
 				tmpp=p;    //用tmpp记录每条记录的开始位置
 				//对记录中的每个字段进行遍历
 				for(unsigned int j=0;j<collName.size();j++)
@@ -113,7 +111,7 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 					{
 						memcpy(value,p,typeLen);
 						break;
-					}		
+					}
 					p=p+typeLen;
 				}
 				//如果字段的值满足比较条件，则将这个字段删除,并将块的usage减去记录长度,同时将p指针指到下一条记录，
@@ -129,7 +127,7 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 					for(int i=0;i<recordLen;i++,ip++)
 						*ip=0;
 					//将p重表指向这个新的位置
-					p=tmpp; 
+					p=tmpp;
 					deleteNum++;
 					bp->dirty=1;
 				}
@@ -143,7 +141,7 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 			else
 				bp=bp->nextBlock;
 		}
-	}	
+	}
 	return deleteNum;
 }
 
@@ -151,7 +149,7 @@ int RecordManager::deleteValue(string tableName, string colName1,string cond1,st
 int RecordManager::deleteValue(string tableName,string colName1,string cond1,string operater1,
 		string colName2,string cond2,string operater2,int logic)
 {
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
 	int deleteNum=0;
 	if(fp!=NULL)
 	{
@@ -170,7 +168,7 @@ int RecordManager::deleteValue(string tableName,string colName1,string cond1,str
 		//计算并保存记录长度
 		int recordLen;
 		recordLen=ap.calcuteLenth(tableName);
-		
+
 		BufferManager::BlockInfo * bp=fp->blockHead;
 		if(bp==NULL)
 		{
@@ -180,12 +178,12 @@ int RecordManager::deleteValue(string tableName,string colName1,string cond1,str
 		while(1)
 		{
 			if(bp==NULL)
-				break;						
+				break;
 			bp->lru++;    //将块的lru增加1
 			p=bp->address;
 
 			while(p-bp->address<bp->usage)
-			{						
+			{
 				tmpp=p;
 				//取出第一个where条件对应字段的值，并做条件判断
 				for(unsigned int j=0;j<collName.size();j++)
@@ -201,7 +199,7 @@ int RecordManager::deleteValue(string tableName,string colName1,string cond1,str
 				}
 				flag1=fullFillCond(type,value,cond1,operater1);
 
-			
+
 				p=tmpp; //重新置为字段的起始地址
 				for(unsigned int j=0;j<collName.size();j++)
 				{
@@ -215,7 +213,7 @@ int RecordManager::deleteValue(string tableName,string colName1,string cond1,str
 					p=p+typeLen;
 				}
 				flag2=fullFillCond(type,value,cond2,operater2);
-				
+
 
 				//如果同时满足两个where条件且为and逻辑时，
 				//或者满足其中的一个条件且为OR逻辑时，则进行删除操作
@@ -252,8 +250,8 @@ int RecordManager::deleteValue(string tableName,string colName1,string cond1,str
 //通过给定文件名查找所有的表中的记录。
 int RecordManager::selectRecord(string tableName)
 {
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
-	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
+
 	if(fp!=NULL)
 	{
 		int recordLen=ap.calcuteLenth(tableName);
@@ -264,7 +262,7 @@ int RecordManager::selectRecord(string tableName)
 		memset(value,0,255);  //将数组置0，否则在输出字符串时没有结尾
 		int valueLen;
 		string type;
-		
+
 		for(unsigned int i=0;i<collName.size();i++)
 			cout<<collName.at(i)<<" ";
 		cout<<endl;
@@ -280,15 +278,15 @@ int RecordManager::selectRecord(string tableName)
 		{
 			if(bp==NULL)
 				break;
-			bp->lru++;				
+			bp->lru++;
 			p=bp->address;
-			
+
 			while(p-bp->address<bp->usage)
 			{
 				for(unsigned int j=0;j<collName.size();j++)
 				{
 					type=collType.at(j);
-					valueLen=ap.calcuteLenth2(type);	
+					valueLen=ap.calcuteLenth2(type);
 					memcpy(value,p,valueLen);
 					p=p+valueLen;
 
@@ -310,7 +308,7 @@ int RecordManager::selectRecord(string tableName)
 				}
 				cout<<endl;
 			}
-	
+
 			if(bp->nextBlock==NULL)
 				bp=bm.getBlock(tableName.c_str(),bp);
 			else
@@ -326,8 +324,8 @@ int RecordManager::selectRecord(string tableName)
 //通过一个给定的文件名和一个where条件来查找表中的记录。
 int RecordManager::selectRecord(string tableName,string colName1,string cond1,string operater1)
 {
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
-	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
+
 	if(fp!=NULL)
 	{
 		int selectNum=0;
@@ -357,16 +355,16 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 			if(bp==NULL)
 				break;
 			bp->lru++;  //块被使用一次
-						
+
 			p=bp->address;
-		
+
 			while((int)(*p)!=0)
 			{
 				tmp=p;
 
 				//在记录字节中找到对应字段的值
 				for(unsigned int j=0;j<collName.size();j++)
-				{		
+				{
 					type=collType.at(j);
 					typeLen=ap.calcuteLenth2(type);
 					if(collName.at(j)==colName1)
@@ -383,13 +381,13 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 					p=tmp+recordLen;
 					continue;
 				}
-				//如果满足条件，则将这条件记录输出				
+				//如果满足条件，则将这条件记录输出
 				selectNum++;                              //将块的lru加一
 				p=tmp;                                    //重新指回记录的起始位置
 				for(unsigned int j=0;j<collName.size();j++)
 				{
 					type=collType.at(j);
-					typeLen=ap.calcuteLenth2(type);	
+					typeLen=ap.calcuteLenth2(type);
 					memcpy(value,p,typeLen);
 					p=p+typeLen;
 
@@ -426,7 +424,7 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 int RecordManager::selectRecord(string tableName,string colName1,string cond1,string operater1,
 		string colName2,string cond2,string operater2,int logic)
 {
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
 	if(fp!=NULL)
 	{
 		int selectNum=0;
@@ -457,15 +455,15 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 			if(bp==NULL)
 				break;
 			bp->lru++;
-						
+
 			p=bp->address;
-		
+
 			while((int)(*p)!=0)
 			{
 				//判断where条件1
 				tmp=p;
 				for(unsigned int j=0;j<collName.size();j++)
-				{		
+				{
 					type=collType.at(j);
 					typeLen=ap.calcuteLenth2(type);
 					if(collName.at(j)==colName1)
@@ -480,7 +478,7 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 				//判断where条件2
 				p=tmp;
 				for(unsigned int j=0;j<collName.size();j++)
-				{		
+				{
 					type=collType.at(j);
 					typeLen=ap.calcuteLenth2(type);
 					if(collName.at(j)==colName2)
@@ -489,9 +487,9 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 						break;
 					}
 					p=p+typeLen;
-				}				
+				}
 				flag2=fullFillCond(type,value,cond2,operater2);
-				
+
 
 				//如果满足条件
 				if((logic==AND&&flag1&&flag2)||(logic==OR&&(flag1||flag2)))
@@ -500,7 +498,7 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 				else
 				{
 					p=tmp+recordLen;
-					continue;	
+					continue;
 				}
 
 
@@ -509,7 +507,7 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 				for(unsigned int j=0;j<collName.size();j++)
 				{
 					type=collType.at(j);
-					typeLen=ap.calcuteLenth2(type);	
+					typeLen=ap.calcuteLenth2(type);
 					memcpy(value,p,typeLen);
 					p=p+typeLen;
 					if(collType.at(j)=="int")
@@ -543,15 +541,15 @@ int RecordManager::selectRecord(string tableName,string colName1,string cond1,st
 //根据提供的表名和插入的记录字节，向数据块中插入记录。
 int RecordManager::insertRecord(string tableName,char * s)
 {
-		 
+
 	//得到对应的文件块
-	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());	
-	
+	BufferManager::FileInfo * fp=bm.getFile(tableName.c_str());
+
 	int recordLen=ap.calcuteLenth(tableName);
 	if(fp!=NULL)
 	{
 		BufferManager::BlockInfo * bp=fp->blockHead;
-		
+
 		//得到文件对应的第一个块
 
 		//如果文件节点中没有块链表，则读取第一个块，同时将这个块挂到文件节点下面
@@ -654,7 +652,7 @@ int RecordManager::fullFillCond(string type,char * value,string scond,string ope
 	{
 		tmp=strcmp(value,cond);
 	}
-	
+
 	//通过不同的operater和两者的差，来最后确定是否满足条件
 	if(operater=="<")
 	{

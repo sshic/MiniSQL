@@ -1,9 +1,5 @@
 /************************些文件包括MiniSQL中Main函数的实现****************************************/
-/************************作者:陈矫彦  时间：2009年10月*********************************************/
 
-#include "stdafx.h"
-
-//引用头文件
 #include "Interpreter.h"
 #include "API.h"
 #include "CatalogManager.h"
@@ -27,7 +23,7 @@ class API;
 #define DROP 2
 #define DELETE 3
 #define INSERT 4
-#define QUIT 5 
+#define QUIT 5
 #define COMMIT 13
 #define EXECFILE 14
 
@@ -55,9 +51,9 @@ int main()
 		if(!flag)
 		{
 			//输入提示信息
-			cout<<">>";   
+			cout<<">>";
 			//以';'作为SQL语句结束的标志,输入一条SQL语句
-			getline(cin,s,';');             
+			getline(cin,s,';');
 		}
 		//如果flag==1, 从文件中读入SQL语句
 		else
@@ -87,7 +83,7 @@ int main()
 			in.~Interpreter();
 			continue;
 		}
-		
+
 		//对firstKey进行遍历，分类处理
 		switch(in.firstKey)
 		{
@@ -170,7 +166,7 @@ int main()
 
 			//执行脚本
 			case EXECFILE:
-				
+
 				//打开文件,如果失败，则输出错误信息
 				file.open(in.fileName.c_str());
 				if(!file.is_open())

@@ -1,6 +1,4 @@
 /************************些文件包括MiniSQL中BufferManager类里面的函数实现**************************/
-/************************作者:陈矫彦  时间：2009年10月*********************************************/
-
 
 #include "stdafx.h"
 #include "CatalogManager.h"
@@ -8,7 +6,7 @@
 #include <fstream>
 #include <io.h>
 #define UNKNOWN_FILE 8                                 //三个宏定义，用于定义文件类型
-#define TABLE_FILE 9   
+#define TABLE_FILE 9
 #define INDEX_FILE 10
 using namespace std;
 CatalogManager::CatalogManager()
@@ -28,12 +26,12 @@ CatalogManager::CatalogManager()
 		file>>indexNum;
 		file>>tmp;
 		while(strcmp(tmp,"$end")!=0)                      //判断是否读到文件尾
-		{	
+		{
 			if(tmp[0]=='@')                               //读到表,接下去输入表的各种信息
 			{
 				CatalogManager::Table tt;                //创建表结构实体
                                                          //将实体的内容读入
-				tt.tableName.assign(tmp,1,strlen(tmp)-1);  
+				tt.tableName.assign(tmp,1,strlen(tmp)-1);
 				file>>tt.collNum;
 				for(int i=0;i<tt.collNum;i++)            //读入字段名
 				{
@@ -81,7 +79,7 @@ CatalogManager::CatalogManager()
 				cout<<"Fail to read db.info,storing error found"<<endl;
 			}
 			file>>tmp;
-		}	
+		}
 	}
 }
 
@@ -215,7 +213,7 @@ void CatalogManager::getFileInfo(string fileName,int * n)
 //删除一个表中所有的记录信息
 int CatalogManager::deleteValue(string tableName)
 {
-	return deleteValue(tableName,getRecordNum(tableName));	
+	return deleteValue(tableName,getRecordNum(tableName));
 }
 
 //删除一个表中固定数目的记录信息
@@ -294,7 +292,7 @@ int CatalogManager::dropIndex(string indexName)
 	{
 		//在iv索引表中找到对应的索引
 		if((*pos).indexName==indexName)
-		{			
+		{
 			for(unsigned int i=0;i<tv.size();i++)
 			{
 				//找到tv中索引表所创建的表项
@@ -310,7 +308,7 @@ int CatalogManager::dropIndex(string indexName)
 					}
 					break;
 				}
-				
+
 			}
 			//删除iv中对应的Index项
 			pos=iv.erase(pos);
@@ -365,7 +363,7 @@ int CatalogManager::addIndex(string indexName,string tableName,string collName)
 			for(i=0;i<(*pos).collName.size();i++)
 			{
 				if((*pos).collName[i]==collName)
-				{       
+				{
 					    //判断索引是否已经存在，如果存在则输出提示，返回0
 						if(strcmp((*pos).collIndex[i].c_str(),"*")!=0)
 						{
@@ -406,7 +404,7 @@ int CatalogManager::addIndex(string indexName,string tableName,string collName)
 		return 0;
 	}
 	outfile.close();
-	
+
 
 	return 1;
 }
@@ -471,9 +469,9 @@ int CatalogManager::addTable(string tableName,vector<string> col,vector<string> 
 	string p("no");
 	if(addTable(tableName,col,type,uniq,p))
 		return 1;
-	else 
+	else
 		return 0;
-	
+
 }
 
 //在创建表时，向字典信息中增加一个表的信息
@@ -496,7 +494,7 @@ int CatalogManager::addTable(string tableName,vector<string> col,vector<string> 
 	t.collUniq=uniq;
 
 	//索引是在CatalogManager模块中增加的，不是在Interpreter模块中增加的
-	for(unsigned i=0;i<col.size();i++)     
+	for(unsigned i=0;i<col.size();i++)
 		t.collIndex.push_back("*");
 	tv.push_back(t);
 

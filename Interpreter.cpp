@@ -1,7 +1,4 @@
 /************************些文件包括Interpreter类里面的函数实现****************************/
-/************************作者:郭周东  时间：2009年11月************************************/
-
-#include "stdafx.h"
 #include "Interpreter.h"
 #include <string>
 #include <iostream>
@@ -11,7 +8,7 @@ using namespace std;
 #define DROP 2
 #define DELETE 3
 #define INSERT 4
-#define QUIT 5 
+#define QUIT 5
 #define COMMIT 13
 #define EXECFILE 14
 
@@ -630,7 +627,7 @@ int Interpreter::interpreter(string s)
 
 	}
 	return 1;
-	
+
 }
 
 

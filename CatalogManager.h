@@ -1,5 +1,4 @@
 /****************************此文件包括MiniSQl中CatalogManager类的定义 **********************/
-/****************************作者：陈矫彦   时间：2009年10月*******************************/
 
 #ifndef CATALOGMANAGER_H
 #define CATALOGMANAGER_H
@@ -27,7 +26,7 @@ public:
 		vector<int> collUniq;           //存放对应的字段是否惟一
 		vector<string> collIndex;       //存放对应字段上的索引信息
 	};
-	 
+
 	int tableNum;                       //表数目
 	int indexNum;                       //索引数目
 	vector<Table> tv;                   //表列表
@@ -37,19 +36,19 @@ public:
 	CatalogManager();
 	~CatalogManager(){};
 
-   
+
 
 	//两个重载函数，用来在创建表时调用,向字典中加入新创建表的信息
 	int addTable(string tableName,vector<string> col,vector<string> type,vector<int> uniq);
 	int addTable(string tableName,vector<string> col,vector<string> type,vector<int> uniq,string primKey);
-	
+
 	//用来创建索引时调用，向字典中加入新创建索引的信息
 	int addIndex(string indexName,string tableName,string colName);
-	
+
 
 	//在字典文件中的记录数加recordNum，用于insert values
 	int insertRecord(string tableName,int recordNum);
-	
+
 	//删除一个表的字典信息
 	int dropTable(string tableName);
 
@@ -63,7 +62,7 @@ public:
 
 	//查找文件信息，是否为索引或者表，如果后者，则包括表长度和记录数
 	 void getFileInfo(string fileName,int * n);
-	
+
 	//查找文件，返回文件类型或者是否有这个文件
 	int findFile(string fileName);
 
@@ -77,7 +76,7 @@ public:
 	int calcuteLenth(string tableName);
 	int calcuteLenth(vector<string> v);
 	int calcuteLenth2(string type);
-	
+
 	//返回表的记录数目
 	int getRecordNum(string tableName);
 

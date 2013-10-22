@@ -1,5 +1,4 @@
 /************************些文件包括MiniSQL中BufferManager类里面的函数实现************************************/
-/************************作者:陈矫彦  时间：2009年10月*******************************************************/
 
 #include"stdafx.h"
 #include "BufferManager.h"
@@ -76,8 +75,8 @@ BufferManager::FileInfo * BufferManager::getFile(const char * fileName)
 
 //首先在已有的文件块中查找相应的文件名，如果找到就返回，否则要使空余的文件块或者替换文件块
 	for(fp=fileHead;fp!=NULL;fp=fp->nextFile)
-		if(!strcmp(fp->fileName,fileName))         
-			return fp;	              
+		if(!strcmp(fp->fileName,fileName))
+			return fp;
 
 
 	if(fp==NULL)
@@ -119,7 +118,7 @@ BufferManager::FileInfo * BufferManager::getFile(const char * fileName)
 			memset(fp->fileName,0,126); //清空原来的文件名
 			strcpy(fp->fileName,fileName);
 			for(bp=fp->blockHead;bp!=NULL;bp++)
-			{			
+			{
 				bp->usage=0;
 				//将文件下面的块全部写回文件
 				if(!flush(fileName,bp))
@@ -180,24 +179,24 @@ BufferManager::BlockInfo * BufferManager::getBlock(const char * fileName,BufferM
 	if(bp!=NULL)
 	{
 		if(fp=fopen(fileName,"rb+"))
-		{  
+		{
 			fseek(fp,bp->offsetNum*BLOCK_SIZE,0);
 			//当文件读完时,如果是读了0个块，也就是文件本来为空时，则返回NULL
-			if(fread(bp->address,1,BLOCK_SIZE,fp)==0)   
+			if(fread(bp->address,1,BLOCK_SIZE,fp)==0)
 			{
 				fclose(fp);
 				bp->offsetNum=0;
 				return NULL;
 			}
 			fclose(fp);
-			
+
 		}
 		else
 		{
 			cout<<"Fail to open the file "<<fileName<<endl;
 			return NULL;
 		}
-	
+
 	}
 	else
 		return NULL;
@@ -239,7 +238,7 @@ BufferManager::BlockInfo * BufferManager::getBlock(const char * fileName,BufferM
 	bp->lru=0;
 	//查找文件块的使用量，并赋给usage
 	bp->usage=findUsage(fileName,bp->address);
-	
+
 	return bp;
 }
 
@@ -271,7 +270,7 @@ BufferManager::BlockInfo * BufferManager::addEmptyBlock(BufferManager::BlockInfo
 	//将这个空块放入链表使用时，设置它在文件中对应的偏移
 	if(pos!=NULL)
 		bp->offsetNum=pos->offsetNum+1;
-	else 
+	else
 		bp->offsetNum=0;
 	//设置这个新块的属性值
 	bp->dirty=0;
@@ -281,7 +280,7 @@ BufferManager::BlockInfo * BufferManager::addEmptyBlock(BufferManager::BlockInfo
 
 	bp->nextBlock=NULL;
 	bp->preBlock=NULL;
-	
+
 	//插入位置不是块头
 	if(pos!=NULL)
 	{
@@ -327,16 +326,16 @@ BufferManager::BlockInfo * BufferManager::findReplaceBlock()
 		}
 
 	//在查找空余块，如果块是脏的，则要先将它写回文件
-	if(LRUBlock->dirty)                         
+	if(LRUBlock->dirty)
 	{
 		if(!flush(tmpfp->fileName,LRUBlock))
-		{	
+		{
 			cout<<"Fail to flush the block"<<endl;
 			return NULL;
 		}
 		LRUBlock->dirty=0;
 	}
-	return LRUBlock;	
+	return LRUBlock;
 }
 
 //根据给定的文件名，将块写回文件
@@ -349,7 +348,7 @@ int BufferManager::flush(const char * fileName,BufferManager::BlockInfo * b)
 	{
 		FILE * fp;
 		if(fp=fopen(f->fileName,"rb+"))   //打开文件
-		{  
+		{
 			fseek(fp,b->offsetNum*BLOCK_SIZE,0);
 			if(fwrite(b->address,BLOCK_SIZE,1,fp)!=1)            //如果写入出错，则返回0
 				return 0;
@@ -359,7 +358,7 @@ int BufferManager::flush(const char * fileName,BufferManager::BlockInfo * b)
 			cout<<"Fail to flush the block of file "<<fileName<<endl;
 			return 0;
 		}
-		
+
 		b->dirty=0;             //将脏数据位重新设为0
 		return 1;
 	}

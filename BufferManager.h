@@ -1,5 +1,4 @@
 /****************************此文件包括MiniSQl中BufferManager类的定义 **********************/
-/****************************作者：陈矫彦   时间：2009年10月********************************/
 #ifndef BufferManager_H
 #define BufferManager_H
 #include "stdafx.h"
@@ -30,13 +29,13 @@ public:
 		FileInfo * nextFile;   //指向下一个文件节点
 		FileInfo * preFile;    //指向前一个文件节点
 	};
-	
+
 	BufferManager();
-	~BufferManager();	
+	~BufferManager();
 	FileInfo * getFile(const char * fileName);
 	BlockInfo * getBlock(const char * fileName,BlockInfo * pos);
 	BlockInfo * addEmptyBlock(BlockInfo * pos);
-	int  flushAll();    
+	int  flushAll();
 	int  flush(const char * fileName,BlockInfo * b);
 private:
 	FileInfo * fileHead;

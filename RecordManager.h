@@ -1,6 +1,4 @@
 /************************些文件包括MiniSQL中RecordManager类的定义********************************************/
-/************************作者:陈矫彦  时间：2009年10月*******************************************************/
-
 #ifndef RECORDMANAGER_H
 #define RECORDMANAGER_H
 #include "stdafx.h"
@@ -23,6 +21,6 @@ public:
 		string colName2,string cond2,string operater2,int logic);
 
 	int fullFillCond(string type,char * value,string scond,string operater);
-	
+
 };
 #endif

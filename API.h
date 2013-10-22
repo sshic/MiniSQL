@@ -1,6 +1,4 @@
 /************************些文件包括MiniSQL中API类的定义********************************************/
-/************************作者:陈矫彦  时间：2009年10月*********************************************/
-
 #ifndef API_H
 #define API_H
 #include "RecordManager.h"
@@ -34,7 +32,7 @@ public:
 	void deleteValue(string tableName);
 	void deleteValue(string tableName,string colName1,string cond1,string operater1);
 	void deleteValue(string tableName,string colName1,string cond1,string operater1,
-		string colName2,string cond2,string operater2,int logic);	
+		string colName2,string cond2,string operater2,int logic);
 
 	int getRecordNum(string tableName);
 	int calcuteLenth(string tableName);

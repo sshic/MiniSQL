@@ -1,5 +1,4 @@
 /************************些文件包括MiniSQL中API类里面的函数实现************************************/
-/************************作者:陈矫彦  时间：2009年10月*********************************************/
 #include "stdafx.h"
 #include "API.h"
 #include "CatalogManager.h"
@@ -8,7 +7,7 @@
 #include <string>
 
 #define UNKNOWN_FILE 8                                 //三个宏定义，用于定义文件类型
-#define TABLE_FILE 9   
+#define TABLE_FILE 9
 #define INDEX_FILE 10
 
 using namespace std;
@@ -19,7 +18,7 @@ class RecordManager;
 extern CatalogManager cm;                             //对全局对象的外部声明
 
 //打印一个表中所有的记录和打印的记录数
-void API::printRecord(string tableName)               
+void API::printRecord(string tableName)
 {
 	//查找字典信息，如果文件不存，直接出错提示
 	if(cm.findFile(tableName)==TABLE_FILE)
@@ -112,7 +111,7 @@ void API::insertRecord(string tableName,vector<string> v)
 			}
 			//如果是字符型的变量，直接进行字节存储
 			else
-			{			
+			{
 				//如果实际输入的string长于定义的char长度，则报错。
 				if(v.at(i).length()>(unsigned int)cm.calcuteLenth2(type.at(i)))
 				{
@@ -138,7 +137,7 @@ void API::insertRecord(string tableName,vector<string> v)
 		{
 			cm.insertRecord(tableName,1);
 		}
-	
+
 }
 
 //将表中的记录全部删除,同时输出删除的记录数目
