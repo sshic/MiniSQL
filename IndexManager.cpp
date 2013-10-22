@@ -1,4 +1,3 @@
-#include<afx.h>
 #include "IndexManager.h"
 
 #include<string>
@@ -28,14 +27,14 @@ void BTree::InsertValue(void* pValue, int Block, int Offset)
 			if(FindIndex == -1)
 				FindIndex = tmpNode.GetCount();			//寻找合适的地点
 			tmpNode.GetPointer(FindIndex, tmpBlock, tmpOffset);
-			tmpNode.SetSelfPosition(tmpBlock, tmpOffset);	
+			tmpNode.SetSelfPosition(tmpBlock, tmpOffset);
 			tmpNode.Read();
 		}
 		tmpNode.InsertKey((char*)pValue, Block, Offset,1);	 //到达叶子节点时插入记录
 	}
 	else if(m_sKeyType == "int") {                   //当key的类型为int时
 		Node<int> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-2, m_iRoot);
 		tmpNode.Read();
 
@@ -53,7 +52,7 @@ void BTree::InsertValue(void* pValue, int Block, int Offset)
 	}
 	else if(m_sKeyType == "float") {                    //当key的类型为float时
 		Node<float> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-2, m_iRoot);
 		tmpNode.Read();
 
@@ -91,17 +90,17 @@ void BTree::DeleteValue(void* pValue)
 		int FindIndex = 0;
 		while(!tmpNode.IsLeaf()) {			  //非叶子节点时
 			FindIndex = tmpNode.FindGreaterKeyIndex((char*)pValue);
-			if(FindIndex == -1)										
-				FindIndex = tmpNode.GetCount();			//寻找合适的地点					
-			tmpNode.GetPointer(FindIndex,tmpBlock, tmpOffset);	
-			tmpNode.SetSelfPosition(tmpBlock, tmpOffset);		
+			if(FindIndex == -1)
+				FindIndex = tmpNode.GetCount();			//寻找合适的地点
+			tmpNode.GetPointer(FindIndex,tmpBlock, tmpOffset);
+			tmpNode.SetSelfPosition(tmpBlock, tmpOffset);
 			tmpNode.Read();
 		}
-		tmpNode.DeleteKey(tmpNode.FindKeyIndex((char*)pValue));	 //到达叶子节点时删除记录	
+		tmpNode.DeleteKey(tmpNode.FindKeyIndex((char*)pValue));	 //到达叶子节点时删除记录
 	}
 	else if(m_sKeyType == "int") {                    //当key的类型为int时
 		Node<int> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-2, m_iRoot);
 		tmpNode.Read();
 
@@ -119,7 +118,7 @@ void BTree::DeleteValue(void* pValue)
 	}
 	else if(m_sKeyType == "float") {                   //当key的类型为float时
 		Node<float> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-2, m_iRoot);
 		tmpNode.Read();
 
@@ -138,7 +137,7 @@ void BTree::DeleteValue(void* pValue)
 }
 
 //删除B树中的节点
-void BTree::DropNode(int Block, int Offset)			
+void BTree::DropNode(int Block, int Offset)
 {
 	if(m_iRoot < 0 || m_file == NULL)       //根节点不存在或文件为空
 	{cout <<"no root when find value in B+tree"<<endl; return;}
@@ -154,13 +153,13 @@ void BTree::DropNode(int Block, int Offset)
 
 		int tmpBlock, tmpOffset;
 		if(tmpNode.IsLeaf())		//叶子节点时
-			tmpNode.FreeNode();		//直接删除节点			
-		else {						//非叶子节点时						
+			tmpNode.FreeNode();		//直接删除节点
+		else {						//非叶子节点时
 			for(int i = 0; i < tmpNode.GetCount(); ++i) {   //查找位置
 				tmpNode.GetPointer(i, tmpBlock, tmpOffset);
 				DropNode(tmpBlock, tmpOffset);
 			}
-			tmpNode.FreeNode();		//删除节点								
+			tmpNode.FreeNode();		//删除节点
 		}
 	}
 	else if(m_sKeyType == "int") {                   //当key的类型为int时
@@ -177,7 +176,7 @@ void BTree::DropNode(int Block, int Offset)
 				tmpNode.GetPointer(i, tmpBlock, tmpOffset);
 				DropNode(tmpBlock, tmpOffset);
 			}
-			tmpNode.FreeNode();			//删除节点	
+			tmpNode.FreeNode();			//删除节点
 		}
 	}
 	else if(m_sKeyType == "float") {                   //当key的类型为float时
@@ -194,17 +193,17 @@ void BTree::DropNode(int Block, int Offset)
 				tmpNode.GetPointer(i, tmpBlock, tmpOffset);
 				DropNode(tmpBlock, tmpOffset);
 			}
-			tmpNode.FreeNode();			//删除节点	
+			tmpNode.FreeNode();			//删除节点
 		}
 	}
 }
 
 //删除B树
-void BTree::Drop()								
+void BTree::Drop()
 {
 	if(m_iRoot < 0 || m_iFirstLeaf < 0 || m_file == NULL)   //根节点，首叶子节点不存在，或文件为空时
 		cout <<"error when drop B+"<<endl; return;
-	DropNode(-1, m_iRoot);			//删除根节点			
+	DropNode(-1, m_iRoot);			//删除根节点
 
 	m_sKeyType = "";                //将各个变量清零，初始化
 	m_iKeyTypeCount = 0;
@@ -240,10 +239,10 @@ void BTree::AddEmptyOffset(int Offset, int NodeSize)
 	m_file->Write(&EmptyOffset, sizeof(int));      //写入空白
 	EmptyOffset = Offset;
 	UpdateBPlusTree();
-}		
+}
 
 //更新B树
-void BTree::UpdateBPlusTree()	
+void BTree::UpdateBPlusTree()
 {
 	m_file->SeekToBegin();               //将文件数据各个变量更新
 	m_file->Write(&m_iRoot,sizeof(int));
@@ -269,7 +268,7 @@ BTree::BTree(CString KeyType, int KeyTypeCount)
 }
 
 //析构函数
-BTree::~BTree(void)	
+BTree::~BTree(void)
 {
 	while(m_aReaders.GetSize() != 0) {
 		if(m_aReaders.GetAt(0) == NULL) {
@@ -294,7 +293,7 @@ void BTree::CreateBPlusTree()
 		m_iKeyTypeCount <= 0)
 	{cout <<"error input for create B+ Tree"<<endl; return;}
 
-	if(m_sKeyType=="char") {                            //当key的类型为char时							
+	if(m_sKeyType=="char") {                            //当key的类型为char时
 		Node<char> tmpNode(m_iKeyTypeCount + 1, this);  //建立key值类型为char的临时节点
 		tmpNode.SetFileOrganize(m_file);                //设置该点的各个变量信息
 		tmpNode.SetCount(0);
@@ -318,7 +317,7 @@ void BTree::CreateBPlusTree()
 		tmpNode.AddNode();
 		tmpNode.GetSelfPosition(tmp, m_iRoot);
 	}
-	
+
 	m_iFirstLeaf=m_iRoot;       //设置B树中第一个点为该临时节点
 
 	char* c = new char[TreeSize];
@@ -331,7 +330,7 @@ void BTree::CreateBPlusTree()
 	((int*)p)[0] = MaxOffset;
 	p += sizeof(int);
 	((int*)p)[0] = EmptyOffset;
-	
+
 	m_file->SeekToBegin();
 	m_file->Write(c, TreeSize);  //写入文件
 	delete[] c;
@@ -339,7 +338,7 @@ void BTree::CreateBPlusTree()
 
 //读取B树的信息
 void BTree::Read()
-{	
+{
 	if(m_file == NULL)             //文件为空
 	{cout <<"error now store in b+tree"<<endl; return;}
 
@@ -368,28 +367,28 @@ bool BTree::FindValue(void* pValue, int& Block, int& Offset)
 	{cout <<"error input for find value in b+"<<endl; return false;}
 	if(m_sKeyType == "char") {                   //当key的类型为char时
 		Node<char> tmpNode(m_iKeyTypeCount + 1, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-2, m_iRoot);
 		tmpNode.Read();
 		int tmpBlock, tmpOffset;
 		int FindIndex = 0;
 		while(!tmpNode.IsLeaf()) {	      //节点为非叶子节点时
-			FindIndex = tmpNode.FindGreaterKeyIndex((char*)pValue);	
-			if(FindIndex == -1)			  //不存在更大key值				
-				FindIndex = tmpNode.GetCount();					
-			tmpNode.GetPointer(FindIndex, tmpBlock, tmpOffset);	
+			FindIndex = tmpNode.FindGreaterKeyIndex((char*)pValue);
+			if(FindIndex == -1)			  //不存在更大key值
+				FindIndex = tmpNode.GetCount();
+			tmpNode.GetPointer(FindIndex, tmpBlock, tmpOffset);
 			tmpNode.SetSelfPosition(tmpBlock, tmpOffset);
 			tmpNode.Read();
 		}
-		FindIndex = tmpNode.FindKeyIndex((char*)pValue);		
-		if(FindIndex < 0)				 //没有找到满足条件的记录						
+		FindIndex = tmpNode.FindKeyIndex((char*)pValue);
+		if(FindIndex < 0)				 //没有找到满足条件的记录
 			return false;
-		tmpNode.GetPointer(FindIndex, Block, Offset);  //返回满足条件的点的地址			
+		tmpNode.GetPointer(FindIndex, Block, Offset);  //返回满足条件的点的地址
 	}
 	else if(m_sKeyType == "int")                   //当key的类型为int时
 	{
 		Node<int> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-1, m_iRoot);
 		tmpNode.Read();
 		int tmpBlock, tmpOffset;
@@ -403,7 +402,7 @@ bool BTree::FindValue(void* pValue, int& Block, int& Offset)
 			tmpNode.Read();
 		}
 		FindIndex = tmpNode.FindKeyIndex((int*)pValue);
-		if(FindIndex < 0)				 //没有找到满足条件的记录	
+		if(FindIndex < 0)				 //没有找到满足条件的记录
 			return false;
 		tmpNode.GetPointer(FindIndex, Block, Offset);  //返回满足条件的点的地址
 	}
@@ -411,7 +410,7 @@ bool BTree::FindValue(void* pValue, int& Block, int& Offset)
 	else if(m_sKeyType == "float")                   //当key的类型为float时
 	{
 		Node<float> tmpNode(m_iKeyTypeCount, this);
-		tmpNode.SetFileOrganize(m_file);	
+		tmpNode.SetFileOrganize(m_file);
 		tmpNode.SetSelfPosition(-1, m_iRoot);
 		tmpNode.Read();
 		int tmpBlock, tmpOffset;
@@ -433,7 +432,7 @@ bool BTree::FindValue(void* pValue, int& Block, int& Offset)
 }
 
 //查找B树中key值更大的记录地址
-bool BTree::FindValueBigger(void* pValue, record& Record)	
+bool BTree::FindValueBigger(void* pValue, record& Record)
 {
 	if(m_iRoot < 0 || m_file == NULL)       //根节点不存在或文件为空
 		cout <<"no root when find value in B+tree"<<endl; return false;
@@ -448,7 +447,7 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 	BTreeReader* Reader;
 	void* tmpNode;
 	int Block, Offset;
-	if(ReadNumber == -1) {									
+	if(ReadNumber == -1) {
 		Reader = new BTreeReader;
 		ReadNumber = m_aReaders.GetSize();
 		Record.position.block_position = Record.position.index_position = 0;
@@ -459,7 +458,7 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 		Reader->SetBFindIndex(-1);
 
 		if(m_sKeyType == "char") {                   //当key的类型为char时
-			tmpNode = new Node<char>(m_iKeyTypeCount + 1, this);	
+			tmpNode = new Node<char>(m_iKeyTypeCount + 1, this);
 			((Node<char>*)tmpNode)->SetFileOrganize(m_file);
 			Reader->SetNode((void*)tmpNode);
 		}
@@ -474,7 +473,7 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 			Reader->SetNode((void*)tmpNode);
 		}
 	}
-	else {										
+	else {
 		Reader = (BTreeReader*)(m_aReaders.GetAt(ReadNumber));
 		FindIndex = Reader->GetFindIndex();
 		BFindIndex = Reader->GetBFindIndex();
@@ -482,23 +481,23 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 	}
 	if(m_sKeyType == "char") {                   //当key的类型为char时
 		if(FindIndex == -1) {
-			((Node<char>*)tmpNode)->SetSelfPosition(-2, m_iRoot);	
+			((Node<char>*)tmpNode)->SetSelfPosition(-2, m_iRoot);
 			((Node<char>*)tmpNode)->Read();
-			while(!((Node<char>*)tmpNode)->IsLeaf()) {		 				
-				FindIndex = ((Node<char>*)tmpNode)->FindGreaterKeyIndex((char*)pValue);	
-				if(FindIndex == -1)											
-					FindIndex = ((Node<char>*)tmpNode)->GetCount();		
+			while(!((Node<char>*)tmpNode)->IsLeaf()) {
+				FindIndex = ((Node<char>*)tmpNode)->FindGreaterKeyIndex((char*)pValue);
+				if(FindIndex == -1)
+					FindIndex = ((Node<char>*)tmpNode)->GetCount();
 				((Node<char>*)tmpNode)->GetPointer(FindIndex, tmpBlock, tmpOffset);
 				((Node<char>*)tmpNode)->SetSelfPosition(tmpBlock, tmpOffset);
 				((Node<char>*)tmpNode)->Read();
 			}
-			FindIndex = ((Node<char>*)tmpNode)->FindKeyIndex((char*)pValue);	
+			FindIndex = ((Node<char>*)tmpNode)->FindKeyIndex((char*)pValue);
 		}
-		if(FindIndex < 0) {														
+		if(FindIndex < 0) {
 			Record.position.block_position = Record.position.index_position = -1;
 			FindIndex = -1;
 			BFindIndex = -1;
-			delete (Node<char>*)(Reader->GetNode());						
+			delete (Node<char>*)(Reader->GetNode());
 			delete Reader;
 			m_aReaders.SetAt(ReadNumber, NULL);
 			while(m_aReaders.GetAt(m_aReaders.GetUpperBound()) == NULL) {
@@ -506,16 +505,16 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 				if(m_aReaders.GetSize() == 0)
 					break;
 			}
-			return false;													
+			return false;
 		}
-		++FindIndex;															
-		if(FindIndex >= ((Node<char>*)tmpNode)->GetCount()) {					
-			((Node<char>*)tmpNode)->GetPointer(FANOUT - 1, tmpBlock, tmpOffset);	
-			if(tmpBlock < 0 || tmpOffset < 0) {								
+		++FindIndex;
+		if(FindIndex >= ((Node<char>*)tmpNode)->GetCount()) {
+			((Node<char>*)tmpNode)->GetPointer(FANOUT - 1, tmpBlock, tmpOffset);
+			if(tmpBlock < 0 || tmpOffset < 0) {
 				Record.position.block_position = Record.position.index_position = -1;
 				FindIndex = -1;
 				BFindIndex = -1;
-				delete (Node<char>*)(Reader->GetNode());					
+				delete (Node<char>*)(Reader->GetNode());
 				delete Reader;
 				m_aReaders.SetAt(ReadNumber,NULL);
 				while(m_aReaders.GetAt(m_aReaders.GetUpperBound()) == NULL) {
@@ -523,15 +522,15 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 					if(m_aReaders.GetSize() == 0)
 						break;
 				}
-				return false;												
+				return false;
 			}
-			((Node<char>*)tmpNode)->SetSelfPosition(tmpBlock, tmpOffset);	
+			((Node<char>*)tmpNode)->SetSelfPosition(tmpBlock, tmpOffset);
 			((Node<char>*)tmpNode)->Read();
 			FindIndex = 0;
 		}
-		((Node<char>*)tmpNode)->GetPointer(FindIndex, Block, Offset);	
+		((Node<char>*)tmpNode)->GetPointer(FindIndex, Block, Offset);
 		Record.position.block_position = Block;
-		Record.position.index_position = Offset;							
+		Record.position.index_position = Offset;
 		Reader->SetFindIndex(FindIndex);
 		Reader->SetBFindIndex(BFindIndex);
 		return true;
@@ -650,7 +649,7 @@ bool BTree::FindValueBigger(void* pValue, record& Record)
 }
 
 //查找B树中key值更小的记录地址
-bool BTree::FindValueSmaller(void* pValue, record& Record)	
+bool BTree::FindValueSmaller(void* pValue, record& Record)
 {
 	if(m_iRoot < 0 || m_file == NULL)                     //根节点不存在或文件为空
 		cout <<"no root when find value in B+tree"<<endl; return false;
@@ -665,7 +664,7 @@ bool BTree::FindValueSmaller(void* pValue, record& Record)
 	BTreeReader* Reader;
 	void* tmpNode;
 	int Block, Offset;
-	if(ReadNumber == -1) {								
+	if(ReadNumber == -1) {
 		Reader = new BTreeReader;
 		ReadNumber = m_aReaders.GetSize();
 		Record.attribute_count = ReadNumber;
@@ -690,7 +689,7 @@ bool BTree::FindValueSmaller(void* pValue, record& Record)
 			Reader->SetNode((void*)tmpNode);
 		}
 	}
-	else {													
+	else {
 		Reader = (BTreeReader*)(m_aReaders.GetAt(ReadNumber));
 		FindIndex = Reader->GetFindIndex();
 		BFindIndex = Reader->GetBFindIndex();
@@ -702,7 +701,7 @@ bool BTree::FindValueSmaller(void* pValue, record& Record)
 			((Node<char>*)tmpNode)->Read();
 			BFindIndex = ((Node<char>*)tmpNode)->FindKeyIndex((char*)pValue);
 		}
-		if(FindIndex < 0) {					
+		if(FindIndex < 0) {
 			Record.position.block_position = Record.position.index_position = -1;
 			FindIndex = -1;
 			BFindIndex = -1;
@@ -716,7 +715,7 @@ bool BTree::FindValueSmaller(void* pValue, record& Record)
 			}
 			return false;
 		}
-		if(FindIndex + 1 > BFindIndex && BFindIndex != -1) {					
+		if(FindIndex + 1 > BFindIndex && BFindIndex != -1) {
 			Record.position.block_position = Record.position.index_position = -1;
 			FindIndex = -1;
 			BFindIndex = -1;
@@ -730,7 +729,7 @@ bool BTree::FindValueSmaller(void* pValue, record& Record)
 			}
 			return false;
 		}
-		((Node<char>*)tmpNode)->GetPointer(FindIndex, Block, Offset);	
+		((Node<char>*)tmpNode)->GetPointer(FindIndex, Block, Offset);
 		Record.position.block_position = Record.position.index_position = -1;
 		++FindIndex;
 		if(FindIndex >= ((Node<char>*)tmpNode)->GetCount()) {

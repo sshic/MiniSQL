@@ -2,7 +2,6 @@
 
 #ifndef CATALOGMANAGER_H
 #define CATALOGMANAGER_H
-#include "stdafx.h"
 #include <string>
 #include <vector>
 using namespace std;

@@ -1,7 +1,7 @@
-/************************些文件包括MiniSQL中RecordManager类的定义********************************************/
+/************************包括MiniSQL中RecordManager类的定义********************************************/
 #ifndef RECORDMANAGER_H
 #define RECORDMANAGER_H
-#include "stdafx.h"
+
 #include <string>
 #include <vector>
 using namespace std;

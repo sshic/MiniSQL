@@ -1,4 +1,4 @@
-/************************些文件包括MiniSQL中RecordManager类里面的函数实现********************************/
+/************************包括MiniSQL中RecordManager类里面的函数实现********************************/
 
 #include "RecordManager.h"
 #include "BufferManager.h"

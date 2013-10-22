@@ -1,4 +1,4 @@
-/************************些文件包括Interpreter类里面的函数实现****************************/
+/************************包括Interpreter类里面的函数实现****************************/
 #include "Interpreter.h"
 #include <string>
 #include <iostream>

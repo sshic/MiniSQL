@@ -1,6 +1,4 @@
-/************************些文件包括MiniSQL中BufferManager类里面的函数实现************************************/
-
-#include"stdafx.h"
+/************************这些文件包括MiniSQL中BufferManager类里面的函数实现************************************/
 #include "BufferManager.h"
 #include "CatalogManager.h"
 #include <iostream>

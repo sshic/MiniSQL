@@ -1,5 +1,4 @@
-/************************些文件包括MiniSQL中API类里面的函数实现************************************/
-#include "stdafx.h"
+/************************这些文件包括MiniSQL中API类里面的函数实现************************************/
 #include "API.h"
 #include "CatalogManager.h"
 #include <iostream>
